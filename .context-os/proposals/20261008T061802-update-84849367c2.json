@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "workflow": "update",
+  "created_at": "2026-10-08T06:18:02.742324+00:00",
+  "proposal_id": "20261008T061802-update-84849367c2",
+  "changes": [
+    {
+      "path": "sessions/2026-10-08.md",
+      "before_sha256": null,
+      "after_sha256": "64a6eec9f5f3b698aa3c1af3b237c28aafa99fe5cce0a9520cb7cbbc09bfab31",
+      "after_text": "# Session — 2026-10-08\n\n## Update: 06:18\n- The synthetic fixture completed its Devin setup test.\n",
+      "diff": "--- a/sessions/2026-10-08.md\n+++ b/sessions/2026-10-08.md\n@@ -0,0 +1,4 @@\n+# Session — 2026-10-08\n+\n+## Update: 06:18\n+- The synthetic fixture completed its Devin setup test.\n"
+    }
+  ],
+  "invariants": [
+    "workflow-path-policy",
+    "optimistic-file-hashes",
+    "exact-proposal-integrity"
+  ],
+  "proposal_digest": "362e7a49868118743bddf1b30a4352f71f9b0effd403de605976f2456052ff60"
+}
