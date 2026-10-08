@@ -1,0 +1,15 @@
+{
+  "what_happened": [
+    "Write one approved outcome as a sentence that names its subject and states one fact."
+  ],
+  "decisions": [
+    {
+      "decision": "Write one approved decision as a sentence that names its subject and states one choice.",
+      "rationale": "State one reason for that decision in a sentence naming its subject.",
+      "rejected_alternatives": "Name one rejected alternative in a self-contained sentence, or leave this blank."
+    }
+  ],
+  "next_time": [
+    "Name the subject and one highest-value next action in a complete sentence."
+  ]
+}

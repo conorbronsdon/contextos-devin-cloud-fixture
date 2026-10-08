@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Generated structural subset. contextos.workspace_schema is authoritative for runtime/component-registry membership, portable path safety, semantic set uniqueness, role collisions, and canonical rendering. Schema-v1 documents are accepted only as migration inputs.",
+  "title": "Context OS tracked workspace configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "agents",
+    "composition",
+    "paths",
+    "template"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "agents": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*$"
+      }
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "extras"
+      ],
+      "properties": {
+        "profile": {
+          "enum": [
+            "full-template",
+            "selected"
+          ]
+        },
+        "extras": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "full-template"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "extras": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state_dir",
+        "sessions_dir",
+        "task_file"
+      ],
+      "properties": {
+        "state_dir": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?![^\\u0000-\\u001f\\u007f]*[\\u0000-\\u001f\\u007f])(?![A-Za-z]:)(?![/\\\\])(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)(?!.*(?:^|/)(?:\\.git|\\.context-os)(?:/|$))(?:[^\\u0000-\\u001f\\u007f]*[^\\u0000-\\u001f\\u007f\\s])$"
+        },
+        "sessions_dir": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?![^\\u0000-\\u001f\\u007f]*[\\u0000-\\u001f\\u007f])(?![A-Za-z]:)(?![/\\\\])(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)(?!.*(?:^|/)(?:\\.git|\\.context-os)(?:/|$))(?:[^\\u0000-\\u001f\\u007f]*[^\\u0000-\\u001f\\u007f\\s])$"
+        },
+        "task_file": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?![^\\u0000-\\u001f\\u007f]*[\\u0000-\\u001f\\u007f])(?![A-Za-z]:)(?![/\\\\])(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)(?!.*(?:^|/)(?:\\.git|\\.context-os)(?:/|$))(?:[^\\u0000-\\u001f\\u007f]*[^\\u0000-\\u001f\\u007f\\s])$"
+        }
+      }
+    },
+    "template": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "source",
+        "bundle_sha256"
+      ],
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?:[^\\u0000-\\u001f\\u007f]*\\S)$"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!\\s)(?:[^\\u0000-\\u001f\\u007f]*\\S)$"
+        },
+        "bundle_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

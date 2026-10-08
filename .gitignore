@@ -1,0 +1,35 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment / secrets
+.env
+.env.local
+*.pem
+*.key
+.claude/settings.local.json
+.devin/config.local.json
+
+# Logs
+*.log
+
+# Node (if you ever run scripts)
+node_modules/
+__pycache__/
+*.py[cod]
+
+# Generated on demand for claude.ai uploads — not committed (goes stale fast)
+REPO_MAP.md
+
+# Local migration inventories may contain private workflow metadata
+.context-os/
+
+# Scratch root for tests/test_hermes_live_harness.py; left behind only by interrupted runs.
+.hermes-test-root/

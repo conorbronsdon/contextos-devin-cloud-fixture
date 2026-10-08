@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "proposal_id": "20261008T051635-setup-65fad963da",
+  "proposal_digest": "b72f0e7ae059af5a3d23be16ac2b6f60a21f55222a26c4f99c516e1b6870db2c",
+  "approval_evidence": "host-mediated confirmation; kernel does not authenticate the human approver",
+  "applied_at": "2026-10-08T05:17:21.246872+00:00",
+  "runtime": "devin",
+  "runtime_identity": "self-reported",
+  "files_changed": [
+    {
+      "path": "identity/lifecycle-fixture.md",
+      "sha256_before": null,
+      "sha256_after": "54b082cea81782da6e022cb3ebd2ce88ee63cf196eb61a0b79a70c02cddda264"
+    },
+    {
+      "path": "state/current.md",
+      "sha256_before": "b8235125cbabc1c9e6d5d50ab389197d08b7095ca9cd2dd21a7956b74706dbc9",
+      "sha256_after": "d8e88f5768e07b221a58f491b02bfa9dc9649557b2e142adb6df39ccf2596569"
+    }
+  ],
+  "git_head_before": "ecd69664f82d34c7e16606ae1d55cc601d8cb8ab",
+  "git_head_after": "ecd69664f82d34c7e16606ae1d55cc601d8cb8ab",
+  "invariants_checked": [
+    "workflow-path-policy",
+    "optimistic-file-hashes",
+    "exact-proposal-integrity"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "description": "Context OS lifecycle advisories. Deterministic mutation checks also run inside proposal/apply.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/context-os-hook.sh\" codex session-start",
+            "commandWindows": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"$root = git rev-parse --show-toplevel; & (Join-Path $root 'scripts/context-os-hook.ps1') codex session-start\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "^apply_patch$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/scripts/context-os-hook.sh\" codex pre-write",
+            "commandWindows": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"$root = git rev-parse --show-toplevel; & (Join-Path $root 'scripts/context-os-hook.ps1') codex pre-write\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
