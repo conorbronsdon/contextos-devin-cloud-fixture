@@ -1,0 +1,124 @@
+# Commands and skills
+
+Context OS guarantees shared state transitions, not identical host features.
+Portable skills gather and review intent; the deterministic kernel owns paths,
+dates, append behavior, optimistic hashes, locking, and receipts.
+
+## Shared lifecycle
+
+| Job | Claude Code | Codex | Hermes | OpenClaw | Cursor CLI / Cursor IDE (experimental) | Devin CLI / session (experimental) | Deterministic operation |
+|---|---|---|---|---|---|---|---|
+| Initialize context | `/setup` | `$setup` | `/context-setup` | `/contextos <alias> setup` | `/context-setup` | `/context-setup` / `@skills:context-setup` | `contextos propose setup` then `apply` |
+| Start a session | `/start` | `$start` | `/context-start` | `/contextos <alias> start` | `/context-start` | `/context-start` / `@skills:context-start` | read-only `contextos start` |
+| Checkpoint | `/update` | `$update` | `/context-update` | `/contextos <alias> update` | `/context-update` | `/context-update` / `@skills:context-update` | `contextos propose update` then `apply` |
+| Close a session | `/end` | `$end` | `/context-end` | `/contextos <alias> end` | `/context-end` | `/context-end` / `@skills:context-end` | `contextos propose end` then `apply` |
+
+The portable cores are `.agents/skills/context-setup`, `context-start`,
+`context-update`, and `context-end`. Short skill directories are thin aliases;
+Claude files are host adapters. All lifecycle names require explicit invocation.
+OpenClaw resumes setup, update, and end questions with
+`/contextos <alias> continue <session-key> <response>` (or the operator-scoped
+`contextos.continue` Gateway method). Its plugin does not expose apply; after
+independent proposal review, an operator runs the kernel from a trusted shell.
+Devin's portable skill frontmatter carries a native user-only trigger. Devin CLI
+is first-class with versioned live evidence and avoids the short aliases because
+it owns built-in `/update`; cloud sessions remain experimental until their
+account-managed behavior has versioned live-conformance evidence.
+
+The mutation protocol is always:
+
+1. the agent drafts reviewed JSON input under ignored `.context-os/inputs/`;
+2. `bash scripts/contextos.sh propose` emits exact diffs and a proposal digest;
+3. the agent presents those diffs and waits;
+4. `bash scripts/contextos.sh apply` receives that exact digest; and
+5. the kernel verifies target hashes, takes an exclusive lock, writes only the
+   proposal paths, and records a receipt.
+
+## Runtime boundary
+
+| Capability | Claude Code | Codex | Hermes | OpenClaw | Cursor CLI / Cursor IDE (experimental) | Devin CLI / session (experimental) |
+|---|---|---|---|---|---|---|
+| Project instructions | `CLAUDE.md` | `AGENTS.md` | `AGENTS.md` | Alias-bound execution-directory `AGENTS.md` | Root `AGENTS.md` | Root `AGENTS.md` |
+| Portable skill source | Thin slash adapters | `.agents/skills/` | External directory or copied skills | Copied into private workspace `.agents/skills/` | `.agents/skills/` | `.agents/skills/` |
+| Project hooks | `.claude/settings.json` | `.codex/hooks.json` after trust | Optional shell/plugin adapter | Not claimed | Not claimed | CLI `.devin/hooks.v1.json`; session not claimed |
+| Authorization | Host settings | Host settings | Outside contract | Operator-scoped lifecycle plugin, OpenClaw model-tool policy, and separate trusted-shell apply | IDE/CLI permissions; CLI `--force` | CLI Normal-mode prompts (project rules limited); cloud account-managed |
+| Lifecycle enforcement | Kernel | Kernel | Kernel | Kernel | Kernel | Kernel |
+| Native memory | Claude auto-memory | Not part of the shared contract | `MEMORY.md` and `USER.md` | Private OpenClaw workspace | Outside contract | Outside contract; cloud Knowledge is not synchronized |
+
+Runtime manifests in `runtimes/` are machine-readable claims. Hooks are defense
+in depth: the kernel repeats mutation invariants during every proposal and apply.
+
+Run `bash scripts/contextos.sh capabilities --agent codex,hermes` to compare
+explicitly named agents. Repeated `--agent` flags also work; omit them to use
+the agents selected in `contextos.workspace.json`. Add `--json` for structured data.
+The view lists each surface's support tier and capability values, portable skills
+from component ownership, common skills, and differences. `unsupported` means the
+descriptor does not claim the capability. `host-provided` marks native and
+advisory capabilities, which do not depend on repository components. Adapter
+capabilities list their runtime-specific required components in JSON and text.
+`installed` means those components appear in `installed-bundle.json`;
+`not-installed` means at least one is absent. `unknown-install-state` means
+the file is absent. Skill install status uses each skill's owning component.
+Availability is not permission or activation, and this view does not verify a
+host installation.
+
+## Portable skill index
+
+| Skill | Job | Effects |
+|---|---|---|
+| `$context-setup` | Canonical setup core | Proposal/apply only |
+| `$context-start` | Canonical read-only start core | No writes |
+| `$context-update` | Canonical checkpoint core | Proposal/apply only |
+| `$context-end` | Canonical close core | Proposal/apply only |
+| `$migrate-gemini` | Map selected Gemini configuration | Reviewed mapping only |
+| `$mine-gemini-workflows` | Recover repeated Gemini workflows | Narrow selected evidence |
+
+The `$setup`, `$start`, `$update`, and `$end` rows in the shared lifecycle table
+are the short portable aliases. The ten tokens above and in that table are the
+complete shipped portable skill catalog.
+
+The two migration skills do not expose private reasoning or make bulk-history
+import safe. Their Claude adapters appear in the command index below.
+
+## Claude-specific command index
+
+| Command | Job | Effects and prerequisites |
+|---|---|---|
+| `/today` | Morning heartbeat | Reviewed heartbeat write; live data stays opt-in |
+| `/capture` | Triage inbox notes | Approved destinations only; source cleanup remains separate |
+| `/find-context` | Locate relevant context | Read-only |
+| `/reconcile` | Detect repository drift | Read-only report unless fixes are separately approved |
+| `/recover` | Inspect stale worktrees and branches | Read-only until destructive cleanup approval |
+| `/content-shipped` | Log confirmed published content | Local content-log write; does not publish |
+| `/clean-ai-writing` | Apply the writing workflow | Proposed revision only |
+| `/dream` | Curate host-local auto-memory | Proposal artifacts only |
+| `/dream-apply` | Apply reviewed memory proposals | Host-local write with per-item review |
+| `/migrate-gemini` | Claude adapter for selected migration | Routes to the portable skill |
+| `/mine-gemini-workflows` | Claude adapter for workflow recovery | Routes to the portable skill |
+
+Uploading these files to claude.ai does not activate commands, hooks, tool
+permissions, or skill metadata. See `docs/claude-projects-sync.md`.
+
+### Published adapter provenance
+
+Some Claude adapter files carry optional `x-source` and `x-source-version`
+frontmatter. A `maintainer-core/...` value is a stable logical synchronization
+ID, not a repository path or public link. It says that the public adapter was
+reviewed and published from the maintainer's generic command core. The paired
+hexadecimal version is the synchronization checkpoint used to detect lag; it
+is provenance metadata, not a release tag or a claim that readers can fetch a
+private source revision.
+
+The checked-in adapter is the complete public artifact for that release.
+Operative rules must be present in the file itself, and any separately
+published upstream is linked directly in the file body at a pinned public
+revision. Current adapter metadata and operative documentation never name
+private repositories or private issue IDs; historical changelog entries remain
+an audit record.
+Removing these fields is safe for runtime discovery but discards useful
+maintainer drift evidence; changing their logical IDs requires updating the
+publication mapping as well.
+
+Run `bash scripts/contextos.sh doctor` for runtime and state diagnostics, then
+`bash scripts/validate-all.sh --workspace` after personalized repository
+changes. Product contributors use the strict form without `--workspace`.

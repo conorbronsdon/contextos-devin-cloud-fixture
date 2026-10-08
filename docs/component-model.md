@@ -1,0 +1,107 @@
+# Component inventory and ownership
+
+`components/manifest.json` is the authoritative inventory for the files that
+make up Context OS. Runtime descriptors name component IDs; the component graph
+resolves those IDs to one deterministic dependency closure and one owner for
+every checked-in path.
+
+The inventory remains metadata rather than executable authority. Materialization
+is implemented by the detached-bundle planner/materializer and the shared
+transaction engine; see [`bundle-locks.md`](bundle-locks.md) and
+[`workspace-configuration.md`](workspace-configuration.md).
+
+## Path policies
+
+Every currently tracked file has exactly one component owner and one policy:
+
+- `managed`: product code, instructions, adapters, or documentation that a
+  future composition tool may install and update.
+- `seed`: initial content that becomes user-owned after it is copied. Future
+  updates must preserve an existing destination unless a separately reviewed
+  migration says otherwise.
+- `development`: repository maintenance, tests, CI, or contribution files.
+  These prove or build the product but are not runtime workspace outputs.
+
+The roots `.agents/skills/`, `.claude/commands/`, `.cursor/`, `content/`,
+`identity/`, `inbox/`, `projects/`, `references/`, `sessions/`, `state/`, and
+`writing/` are extensible. This lets a configured Cursor workspace track its
+own rules, permissions, skills, hooks, or MCP settings without weakening the
+strict maintainer inventory. The legacy root configuration file `workspace.yaml` is an exact
+extensible path rather than a directory root. The canonical tracked
+`contextos.workspace.json` created by reviewed setup transactions is the other
+exact extensible path.
+Checked-in files below them retain their explicit owner and policy, while new
+user files are workspace-owned rather than component-owned. The maintainer
+check remains strict over the repository's tracked source set;
+`bash scripts/validate-all.sh --workspace` selects the operational exception
+for a customized workspace. That operational check also permits intentionally
+removed `seed` files, while missing `managed` or `development` files still fail.
+CI and product contributors use the strict default.
+
+Two exact root paths have virtual transaction owners rather than release
+components: `contextos.workspace.json` is owned by `workspace-config`, and
+legacy `workspace.yaml` by `legacy-workspace-config`. This lets strict tracked
+coverage validate a configured clone without pretending those workspace-local
+files are shipped component assets. The exception is exact; it does not make
+other repository-root paths extensible or writable.
+
+## Components
+
+| Component | Depends on | Responsibility |
+|---|---|---|
+| `core` | none | Provider-neutral kernel, shared docs and scripts, repository scaffolding, and user-owned seeds |
+| `portable-skills` | `core` | Provider-neutral lifecycle and migration skill bodies |
+| `openai-skill-metadata` | `portable-skills` | OpenAI discovery metadata, separate from portable skill bodies |
+| `agents-instructions` | `core`, `portable-skills` | The shared `AGENTS.md` instruction bridge |
+| `claude-adapter` | `core`, `portable-skills` | Claude Code instructions, commands, hooks, memory tooling, and descriptor |
+| `codex-adapter` | `core`, `portable-skills`, `agents-instructions`, `openai-skill-metadata` | Codex hooks, onboarding, metadata, and descriptor |
+| `hermes-adapter` | `core`, `portable-skills`, `agents-instructions` | Hermes guidance, optional hooks, and descriptor |
+| `openclaw-adapter` | `core`, `portable-skills`, `agents-instructions` | First-class OpenClaw plugin, guidance, descriptor, and conformance |
+| `cursor-adapter` | `core`, `portable-skills`, `agents-instructions` | First-class Cursor CLI and experimental IDE guidance, descriptor, and conformance |
+| `devin-adapter` | `core`, `portable-skills`, `agents-instructions` | First-class Devin CLI import guard and conformance, plus experimental cloud-session/Review guidance and managed-account conformance |
+| `example-project` | `core` | Optional removable example content |
+
+Shared dependencies have one owner. Selecting both Claude and Codex therefore
+includes `core` and `portable-skills` once; neither adapter becomes a second
+owner. OpenAI metadata is also isolated so an agentskills.io consumer can use
+portable skill bodies without inheriting Codex-specific presentation files.
+When a runtime names a directory source such as `.agents/skills`, the resolver
+materializes only descendant files owned by the selected closure; an unselected
+component may contribute a different fragment beneath the same directory.
+
+## Validation
+
+Run:
+
+```bash
+python scripts/component-manifests.py check
+```
+
+The full validator runs the same check. It rejects unknown dependencies,
+cycles, unknown runtime component references, unsafe or symlinked paths,
+case-insensitive, Unicode-normalized, and Windows-aliased collisions,
+file/descendant ownership conflicts, symlinked generated targets, missing or
+untracked owned files, duplicate owners, and any unclassified tracked source
+file. `components/schema.json` is generated from the Python contract and must
+stay current.
+
+## Materialization guarantees
+
+The shipped materializer:
+
+1. record the selected runtimes and components in workspace-local
+   configuration;
+2. distinguish pristine managed outputs from modified or user-owned targets;
+3. preflight case-folded paths, symlink ancestors, and destination containment;
+4. produce an exact add/change/remove plan with immutable source hashes;
+5. require digest-bound approval and use the transaction lock and receipts;
+6. preserve existing `seed` paths and arbitrary files below extensible roots;
+7. projects selected-profile `README.md` support and shared `AGENTS.md`
+   instructions deterministically while retaining their single manifest owner;
+8. validates the selected runtime closure without treating the development test
+   tree as a workspace output.
+
+Workspace schema v2 supports both the explicit full-template closure and a
+durable selected profile. Guided init/update/reconcile derive that closure from
+runtimes and optional extras, pin the exact bundle digest, and reuse the same
+proposal, journal, rollback, and receipt path as low-level materialization.
