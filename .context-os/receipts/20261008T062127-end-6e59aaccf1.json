@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "proposal_id": "20261008T062127-end-6e59aaccf1",
+  "proposal_digest": "90eff67a3a7e1b5cb935cf7b4107911871595cbde8f4e695b08e6abc8acdbe98",
+  "approval_evidence": "host-mediated confirmation; kernel does not authenticate the human approver",
+  "applied_at": "2026-10-08T06:24:01.555347+00:00",
+  "runtime": "devin",
+  "runtime_identity": "self-reported",
+  "files_changed": [
+    {
+      "path": "sessions/2026-10-08.md",
+      "sha256_before": "64a6eec9f5f3b698aa3c1af3b237c28aafa99fe5cce0a9520cb7cbbc09bfab31",
+      "sha256_after": "e4f78a35e51b12cfabc1692db1038f53cc792bd07ad075e56ac8867ca632a66e"
+    }
+  ],
+  "git_head_before": "6f5c1825aacd43fd86b0d95dea855a5b6e12c1d5",
+  "git_head_after": "6f5c1825aacd43fd86b0d95dea855a5b6e12c1d5",
+  "invariants_checked": [
+    "workflow-path-policy",
+    "optimistic-file-hashes",
+    "exact-proposal-integrity"
+  ]
+}
