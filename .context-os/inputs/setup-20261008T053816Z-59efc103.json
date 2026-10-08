@@ -1,0 +1,9 @@
+{
+  "files": {
+    "identity/lifecycle-fixture.md": "# Synthetic lifecycle identity\n\nThe fixture tests portable continuity.\n",
+    "state/current.md": "# Current State\n\n**Last Updated:** {{TODAY}}\n\n## Active priorities\n\n1. Verify synthetic portable continuity.\n"
+  },
+  "replace_populated": [
+    "state/current.md"
+  ]
+}
