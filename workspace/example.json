@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "agents": [],
+  "composition": {
+    "profile": "full-template",
+    "extras": []
+  },
+  "paths": {
+    "state_dir": "state",
+    "sessions_dir": "sessions",
+    "task_file": "TODO.md"
+  },
+  "template": {
+    "version": "1.1.1",
+    "source": "agent-context-os-template",
+    "bundle_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  }
+}
