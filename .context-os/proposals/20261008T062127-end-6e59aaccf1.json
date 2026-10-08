@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "workflow": "end",
+  "created_at": "2026-10-08T06:21:27.226472+00:00",
+  "proposal_id": "20261008T062127-end-6e59aaccf1",
+  "changes": [
+    {
+      "path": "sessions/2026-10-08.md",
+      "before_sha256": "64a6eec9f5f3b698aa3c1af3b237c28aafa99fe5cce0a9520cb7cbbc09bfab31",
+      "after_sha256": "e4f78a35e51b12cfabc1692db1038f53cc792bd07ad075e56ac8867ca632a66e",
+      "after_text": "# Session — 2026-10-08\n\n## Update: 06:18\n- The synthetic fixture completed its Devin setup test.\n\n## Session 06:21\n\n## What happened\n- The synthetic fixture completed its Devin lifecycle test.\n\n## Decisions\n- None recorded\n\n## Next time\n- The synthetic fixture must verify continuity using 1d786e54360f710e66c587ae0c548734.\n",
+      "diff": "--- a/sessions/2026-10-08.md\n+++ b/sessions/2026-10-08.md\n@@ -2,3 +2,14 @@\n \n ## Update: 06:18\n - The synthetic fixture completed its Devin setup test.\n+\n+## Session 06:21\n+\n+## What happened\n+- The synthetic fixture completed its Devin lifecycle test.\n+\n+## Decisions\n+- None recorded\n+\n+## Next time\n+- The synthetic fixture must verify continuity using 1d786e54360f710e66c587ae0c548734.\n"
+    }
+  ],
+  "invariants": [
+    "workflow-path-policy",
+    "optimistic-file-hashes",
+    "exact-proposal-integrity"
+  ],
+  "proposal_digest": "90eff67a3a7e1b5cb935cf7b4107911871595cbde8f4e695b08e6abc8acdbe98"
+}
